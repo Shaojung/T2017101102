@@ -1,7 +1,5 @@
 package com.example.teacher.t2017101102;
 
-import android.util.Log;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -15,7 +13,9 @@ import java.util.ArrayList;
 public class MyDataHandler extends DefaultHandler {
     boolean isTitle = false;
     boolean isItem = false;
-    public ArrayList<String> data = new ArrayList<>();
+    boolean isLink = false;
+    public ArrayList<RSSNewsItem> data = new ArrayList<>();
+    RSSNewsItem item;
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
@@ -23,9 +23,14 @@ public class MyDataHandler extends DefaultHandler {
         {
             isTitle = true;
         }
+        if (qName.equals("link"))
+        {
+            isLink = true;
+        }
         if (qName.equals("item"))
         {
             isItem = true;
+            item = new RSSNewsItem();
         }
     }
 
@@ -36,9 +41,14 @@ public class MyDataHandler extends DefaultHandler {
         {
             isTitle = false;
         }
+        if (qName.equals("link"))
+        {
+            isLink = false;
+        }
         if (qName.equals("item"))
         {
             isItem = false;
+            data.add(item);
         }
     }
 
@@ -47,8 +57,13 @@ public class MyDataHandler extends DefaultHandler {
         super.characters(ch, start, length);
         if (isItem && isTitle)
         {
-            data.add(new String(ch, start, length));
-            Log.d("NET", new String(ch, start, length));
+            item.title = new String(ch, start, length);
+            // Log.d("NET", new String(ch, start, length));
+        }
+        if (isItem && isLink)
+        {
+            item.link = new String(ch, start, length);
+            // Log.d("NET", new String(ch, start, length));
         }
     }
 }

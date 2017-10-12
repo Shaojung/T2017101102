@@ -19,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -66,7 +67,12 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, dataHandler.data);
+                            ArrayList<String> forAdapter = new ArrayList<String>();
+                            for (RSSNewsItem i : dataHandler.data)
+                            {
+                                forAdapter.add(i.title);
+                            }
+                            adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, forAdapter);
                             lv.setAdapter(adapter);
 
                         }
