@@ -3,6 +3,8 @@ package com.example.teacher.t2017101102;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -23,11 +25,13 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 public class MainActivity extends AppCompatActivity {
-
+    ListView lv;
+    ArrayAdapter<String> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        lv = (ListView) findViewById(R.id.listView);
     }
     public void click1(View v)
     {
@@ -52,12 +56,21 @@ public class MainActivity extends AppCompatActivity {
                         sb.append(str);
                     }
                     String result = sb.toString();
-                    MyDataHandler dataHandler = new MyDataHandler();
+                    final MyDataHandler dataHandler = new MyDataHandler();
                     SAXParserFactory spf = SAXParserFactory.newInstance();
                     SAXParser sp = spf.newSAXParser();
                     XMLReader xr = sp.getXMLReader();
                     xr.setContentHandler(dataHandler);
                     xr.parse(new InputSource(new StringReader(result)));
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, dataHandler.data);
+                            lv.setAdapter(adapter);
+
+                        }
+                    });
 
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
