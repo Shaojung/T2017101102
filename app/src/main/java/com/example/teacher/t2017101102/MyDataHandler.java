@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 public class MyDataHandler extends DefaultHandler {
     boolean isTitle = false;
+    boolean isItem = false;
     public ArrayList<String> data = new ArrayList<>();
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -21,6 +22,10 @@ public class MyDataHandler extends DefaultHandler {
         if (qName.equals("title"))
         {
             isTitle = true;
+        }
+        if (qName.equals("item"))
+        {
+            isItem = true;
         }
     }
 
@@ -31,12 +36,16 @@ public class MyDataHandler extends DefaultHandler {
         {
             isTitle = false;
         }
+        if (qName.equals("item"))
+        {
+            isItem = false;
+        }
     }
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         super.characters(ch, start, length);
-        if (isTitle)
+        if (isItem && isTitle)
         {
             data.add(new String(ch, start, length));
             Log.d("NET", new String(ch, start, length));
